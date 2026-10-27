@@ -1,0 +1,647 @@
+*,
+*::after,
+*::before {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+body {
+    background: var(--color-canvas, #F4F1EA);
+}
+
+.container {
+    width: 100%;
+    padding: 0 20px;
+}
+
+.burger--span {
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Text/Nav */
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%;
+    /* 14px */
+    letter-spacing: 0.28px;
+}
+
+.burger--wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #D5D0C6;
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 101;
+    width: 100%;
+    background: var(--color-canvas, #F4F1EA);
+}
+
+.burger--wrapper {
+    background: none;
+    cursor: pointer;
+}
+
+/* Menu → Close: буквы перекатываются по одной */
+.burger__label {
+    display: grid;
+    overflow: hidden;
+}
+
+.burger__word {
+    grid-area: 1 / 1;
+    display: flex;
+}
+
+.burger__word span {
+    display: block;
+    transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1) calc(var(--i) * 0.03s);
+}
+
+.burger__word--close span {
+    transform: translateY(110%);
+}
+
+.header.is-menu-open .burger__word--menu span {
+    transform: translateY(-110%);
+}
+
+.header.is-menu-open .burger__word--close span {
+    transform: translateY(0);
+    transition-delay: calc(0.1s + var(--i) * 0.03s);
+}
+
+/* Две линии → крестик: сначала съезжаются к центру, потом поворачиваются */
+.burger__icon {
+    position: relative;
+    width: 22px;
+    height: 10px;
+}
+
+.burger__bar {
+    position: absolute;
+    right: 0;
+    height: 1.5px;
+    background: var(--color-text-primary, #22221F);
+    transition:
+        top 0.25s ease 0.25s,
+        right 0.25s ease 0.25s,
+        width 0.25s ease 0.25s,
+        transform 0.3s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.burger__bar:first-child {
+    top: 0;
+    width: 22px;
+}
+
+.burger__bar:last-child {
+    top: 8.5px;
+    width: 16px;
+}
+
+/* Крестик 14×14 как в макете: линии 19.8px (14√2), прижат к правому краю */
+.header.is-menu-open .burger__bar {
+    top: 4.25px;
+    right: -2.9px;
+    width: 19.8px;
+    transition:
+        top 0.25s ease,
+        right 0.25s ease,
+        width 0.25s ease,
+        transform 0.35s cubic-bezier(0.76, 0, 0.24, 1) 0.2s;
+}
+
+.header.is-menu-open .burger__bar:first-child {
+    transform: rotate(45deg);
+}
+
+.header.is-menu-open .burger__bar:last-child {
+    transform: rotate(-45deg);
+}
+
+/* Mobile menu */
+.menu-open {
+    overflow: hidden;
+}
+
+.menu {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    background: var(--color-canvas, #F4F1EA);
+    visibility: hidden;
+    clip-path: inset(0 0 100% 0);
+    transition:
+        clip-path 0.6s cubic-bezier(0.76, 0, 0.24, 1) 0.2s,
+        visibility 0s linear 0.8s;
+}
+
+.menu.is-open {
+    visibility: visible;
+    clip-path: inset(0 0 0 0);
+    transition:
+        clip-path 0.8s cubic-bezier(0.76, 0, 0.24, 1),
+        visibility 0s;
+}
+
+.menu__inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+/* Место под шапку + линия */
+.menu__top {
+    position: relative;
+    height: 64px;
+}
+
+.menu__top::after,
+.menu__bottom::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--color-border, #D5D0C6);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.menu__top::after {
+    bottom: 0;
+}
+
+.menu__bottom::before {
+    top: 0;
+}
+
+.menu__nav {
+    padding-top: 40px;
+}
+
+.menu__list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Маска для выезда текста; padding/margin дают место выносным элементам (J, j) */
+.menu__item {
+    overflow: hidden;
+    padding: 0 8px 8px;
+    margin: 0 -8px -8px;
+}
+
+.menu__link {
+    position: relative;
+    display: inline-block;
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Display/Menu */
+    font-family: "Cormorant Garamond", serif;
+    font-size: 44px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 48px;
+    /* в стиле 110% (48.4px), но в макете блоки 48px — шаг пунктов 62px */
+    letter-spacing: -0.44px;
+}
+
+.menu__link span {
+    display: block;
+    transform: translateY(120%);
+    transition: transform 0.4s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+.menu__link.is-active {
+    color: var(--color-accent-dark, #565944);
+}
+
+.menu__link.is-active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+}
+
+.menu__cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 42px;
+    margin-bottom: 48px;
+    padding: 17px 24px;
+    background: var(--color-text-primary, #22221F);
+    color: var(--color-canvas, #F4F1EA);
+
+    /* Mobile/Text/Button */
+    font-family: Manrope, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%;
+    letter-spacing: 0.42px;
+}
+
+.menu__bottom {
+    position: relative;
+    margin-top: auto;
+    padding: 23px 0 52px;
+}
+
+.menu__contacts {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.menu__social {
+    display: flex;
+    gap: 20px;
+    margin-top: 32px;
+}
+
+.menu__contact,
+.menu__social-link {
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Text/Small */
+    font-family: Manrope, sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 155%;
+}
+
+.menu__social-link {
+    color: var(--color-text-secondary, #77766F);
+}
+
+.menu__cta,
+.menu__contacts,
+.menu__social {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+/* Open state: staggered entrance */
+.menu.is-open .menu__top::after,
+.menu.is-open .menu__bottom::before {
+    transform: scaleX(1);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.45s;
+}
+
+.menu.is-open .menu__bottom::before {
+    transition-delay: 0.75s;
+}
+
+.menu.is-open .menu__link span {
+    transform: translateY(0);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) calc(0.35s + var(--i) * 0.07s);
+}
+
+.menu.is-open .menu__link.is-active::after {
+    transform: scaleX(1);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.9s;
+}
+
+.menu.is-open .menu__cta,
+.menu.is-open .menu__contacts,
+.menu.is-open .menu__social {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 0.6s ease 0.7s,
+        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.7s;
+}
+
+.menu.is-open .menu__contacts {
+    transition-delay: 0.85s;
+}
+
+.menu.is-open .menu__social {
+    transition-delay: 0.95s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .menu,
+    .menu.is-open {
+        clip-path: none;
+        opacity: 0;
+        transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+    }
+
+    .menu.is-open {
+        opacity: 1;
+        transition: opacity 0.2s ease;
+    }
+
+    .burger__word span,
+    .burger__bar {
+        transition: none !important;
+    }
+
+    .menu *,
+    .menu *::before,
+    .menu *::after {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+.title {
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Display/Hero */
+    font-family: "Cormorant Garamond";
+    font-size: 52px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 98%;
+    /* 50.96px */
+    letter-spacing: -0.78px;
+}
+
+.hero {
+    padding: 32px 0 72px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.hero--img {
+    width: 327px;
+    height: auto;
+    align-self: flex-end;
+}
+
+.hero--text {
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Text/Body L */
+    font-family: Manrope;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 160%;
+    /* 27.2px */
+}
+
+.hero--btn {
+    color: var(--color-canvas, #F4F1EA);
+
+    /* Mobile/Text/Button */
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%;
+    /* 14px */
+    letter-spacing: 0.42px;
+    padding: 17px 24px;
+    background: var(--color-text-primary, #22221F);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+}
+
+.hero--text--container {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.h2 {
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Display/H2 */
+    font-family: "Cormorant Garamond";
+    font-size: 34px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 108%;
+    /* 36.72px */
+    letter-spacing: -0.17px;
+}
+
+.selected .container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.selected--list {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.selected--card.right {
+    align-self: flex-end;
+}
+
+.selected--card.right img {
+    max-width: 248px;
+}
+
+.selected--card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.selected--card--info {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.selected--card--info--left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.selected--card--chars {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.selected--card--title {
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Display/H3 */
+    font-family: "Cormorant Garamond";
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 118%;
+    /* 30.68px */
+}
+
+.selected--card--char {
+    color: var(--color-accent-dark, #565944);
+
+    /* Mobile/Text/Small */
+    font-family: Manrope;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 155%;
+    /* 20.15px */
+}
+
+.selected--card--char.light {
+    color: var(--color-text-secondary, #77766F);
+}
+
+.selected--card--year {
+    color: var(--color-text-secondary, #77766F);
+
+    /* Mobile/Text/Small */
+    font-family: Manrope;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 155%;
+    /* 20.15px */
+}
+
+.selected--btn {
+    margin-top: 8px;
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Text/Button */
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%;
+    /* 14px */
+    letter-spacing: 0.42px;
+    width: 100%;
+    border: 1px solid var(--color-text-primary, #22221F);
+    background-color: transparent;
+    padding: 17px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    width: 118px;
+    height: auto;
+}
+
+.selected {
+    padding-bottom: 98px;
+}
+
+.studio {
+    padding: 72px 0;
+    background: var(--color-surface, #EAE6DD);
+}
+
+.studio .container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.studio--text {
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Text/Body */
+    font-family: Manrope;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 165%;
+    /* 24.75px */
+}
+
+.studio--title {
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Display/Statement */
+    font-family: "Cormorant Garamond";
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 122%;
+    /* 36.6px */
+}
+
+.studio--btn {
+    color: var(--color-text-primary, #22221F);
+
+    /* Mobile/Text/Button */
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%;
+    /* 14px */
+    letter-spacing: 0.42px;
+    position: relative;
+    width: fit-content;
+}
+
+.studio--btn::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: var(--color-text-primary, #22221F);
+    bottom: -6px;
+    left: 0;
+}
+
+.studio--content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}

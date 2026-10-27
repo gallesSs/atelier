@@ -1,0 +1,7 @@
+/* Первый экран скрыт до старта анимации (класс .anim ставится в <head>), чтобы не было мигания */
+.anim .header .container > *,
+.anim .title,
+.anim .hero--img,
+.anim .hero--text--container > * {
+    visibility: hidden;
+}
